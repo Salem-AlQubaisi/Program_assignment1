@@ -1,0 +1,138 @@
+import time
+import random
+import sys
+
+def splash_screen():
+    print("________________________________________")
+    print("Hotel Reservation System")  
+    print("________________________________________")
+    print("Loading..", end="")
+    for _ in range(6):
+        time.sleep(0.5)
+        print(".", end="", flush=True)
+    print("\n")
+
+def start_or_quit():
+    return True  
+
+class Reservation:
+    def __init__(self, reservation_id, name, email, phone, address, check_in, check_out, room, nights, room_type, facilities):
+        self.reservation_id = reservation_id
+        self.name = name
+        self.email = email
+        self.phone = phone
+        self.address = address
+        self.check_in = check_in
+        self.check_out = check_out
+        self.room = room
+        self.nights = nights
+        self.room_type = room_type
+        self.facilities = facilities
+        self.room_cost = self.calculate_room_cost()
+        self.facilities_cost = self.calculate_facilities_cost()
+        self.total_cost = (self.room_cost + self.facilities_cost) * self.nights
+        self.tax = self.total_cost * 0.16
+        self.final_total = self.total_cost + self.tax
+        self.trip_number = random.randint(1000000000000000, 9999999999999999)
+        self.confirmation_number = random.randint(1000000, 9999999)
+
+    def calculate_room_cost(self):
+        if self.room_type == "1 Bed":
+            return 50
+        elif self.room_type == "2 Queen Beds":
+            return 80
+        elif self.room_type == "3 Beds":
+            return 100
+        else:
+            return 0
+
+    def calculate_facilities_cost(self):
+        total = 0
+        for facility in self.facilities:
+            if facility == "No Smoking":
+                total += 5
+            elif facility == "Desk":
+                total += 3
+            elif facility == "Safe":
+                total += 3
+            elif facility == "Coffee Maker":
+                total += 2
+            elif facility == "Hair Dryer":
+                total += 4
+        return total
+
+    def display_reservation(self):
+        print("Congratulations Your Reservation Is Confirmed!!") 
+        print("Thanks for your reservation. Please print your hotel receipt and show it at check-in.. \n")
+        print(f"Your Name: {self.name}")
+        print(f"Your Email: {self.email}")
+        print(f"Priceline Trip Number: {self.trip_number}")
+        print(f"Hotel Confirmation Number: {self.confirmation_number}\n")
+        print("---------------------------------------------------------------")
+        print(f"Comfort Inn & Suites Los Alamos")
+        print(f"Address: {self.address}")
+        print(f"Check-In: {self.check_in} - 03:00 PM")
+        print(f"Check-Out: {self.check_out} - 12:00 PM")
+        print(f"Number of Nights: {self.nights}")
+        print(f"Number of Rooms: 1")
+        print(f"Room: {self.room} - {self.room_type}")
+        print(f"Facilities: {', '.join(self.facilities)}\n")
+        print("---------------------------------------------------------------")
+        print("Summary of Charges")
+        print(f"Billing Name: {self.name}")
+        print(f"Credit Card: Mastercard (ending in 9904)")  
+        print(f"Room Cost: ${self.room_cost:.2f} avg. per room, per night")
+        print(f"Rooms: 1")
+        print(f"Nights: {self.nights}")
+        print(f"Room Subtotal: ${self.total_cost:.2f}")
+        print(f"Taxes & Fees: ${self.tax:.2f}")
+        print(f"Total Charges: ${self.final_total:.2f} (prices are in US dollars)\n")
+
+class Hotel:
+    def __init__(self):
+        self.rooms = {1: "Available", 2: "Available", 3: "Available"}
+
+    def check_room_availability(self, room_number):
+        return self.rooms[room_number] == "Available"
+
+    def book_room(self, room_number):
+        self.rooms[room_number] = "Booked"
+
+    def display_available_rooms(self):
+        print("Available Rooms:")
+        for room, status in self.rooms.items():
+            if status == "Available":
+                print(f"Room {room} - Available")
+
+def reservation_flow():
+    hotel = Hotel()
+
+    name = "Ted Vera"
+    email = "tedvera3@mac.com"
+    phone = "123-456-7890"
+    address = "123 Main Street, Los Alamos, NM"
+    check_in = "Sep 22, 2024"
+    check_out = "Sep 24, 2024"
+    nights = 2
+
+    for room_number in hotel.rooms:
+        if hotel.check_room_availability(room_number):
+            hotel.book_room(room_number)
+            selected_room = room_number
+            break
+
+    room_type = "2 Queen Beds"
+    facilities = ["No Smoking", "Desk", "Coffee Maker"]
+    reservation_id = "R123456"
+    reservation = Reservation(reservation_id, name, email, phone, address, check_in, check_out, selected_room, nights, room_type, facilities)
+
+    reservation.display_reservation()
+
+def main():
+    splash_screen()
+    if start_or_quit():
+        reservation_flow()
+        print("\nThank you for using the Hotel Reservation System. Goodbye!")
+
+if __name__ == "__main__":
+    main()
